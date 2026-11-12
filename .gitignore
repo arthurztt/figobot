@@ -1,0 +1,13 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.local
+*.pem
+*.key
+npm-debug.log*
+/vendor/
+*.exe
+*.test
+*.out
