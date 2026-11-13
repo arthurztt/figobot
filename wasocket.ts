@@ -35,6 +35,12 @@ async function connectToWhatsapp() {
               console.log('replying to', m.key.remoteJid)
               await sock.sendMessage(m.key.remoteJid!, { text: 'Hello from Baileys!' })
           }
-      })
+  })
+
+  sock.ev.on('creds.update', saveCreds)
 }
+
+connectToWhatsapp()
+
+
 
