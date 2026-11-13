@@ -11,3 +11,4 @@ npm-debug.log*
 *.exe
 *.test
 *.out
+auth_info_baileys/
