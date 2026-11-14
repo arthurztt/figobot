@@ -4,7 +4,7 @@ import makeWASocket, {
   downloadMediaMessage,
   type WAMessage,
 } from '@whiskeysockets/baileys';
-import { imageToSticker, type Mode } from './sticker.js';
+import { imageToSticker, videoToSticker, type Mode } from './sticker.js';
 import { Boom } from '@hapi/boom'
 import qrcode from 'qrcode-terminal'
 
@@ -53,9 +53,10 @@ async function connectToWhatsapp() {
         if (media.kind === 'image') {
           const webp = await imageToSticker(buffer, mode)
           await sock.sendMessage(m.key.remoteJid, { sticker: webp }, { quoted: m })
-        } else {
-          await sock.sendMessage(m.key.remoteJid, { text: 'Video vem no proximo passo' }, { quoted: m })
-              } 
+        } else if (media.kind === 'video') {
+          const webp = await videoToSticker(buffer, mode)
+          await sock.sendMessage(m.key.remoteJid, { sticker : webp }, { quoted: m })
+        }
             } catch (err) {
               console.error(err)
               await sock.sendMessage(m.key.remoteJid, { text: 'Não consegui criar a figurinha.'}, { quoted: m })
