@@ -1,5 +1,5 @@
 # 📸 Figobot
-![Demonstração](./assets/test.mp4)
+![Demonstração](./assets/test.gif)
 
 O **Figobot** é um bot de WhatsApp desenvolvido em TypeScript focado em criar figurinhas (stickers) de forma rápida e prática. Ele aceita imagens, vídeos e até mesmo **links** de redes sociais (como YouTube e Twitter/X), convertendo-os automaticamente para o formato WebP exigido pelo WhatsApp.
 
