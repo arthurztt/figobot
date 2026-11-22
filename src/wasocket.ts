@@ -5,6 +5,7 @@ import makeWASocket, {
   type WAMessage,
 } from '@whiskeysockets/baileys';
 import { imageToSticker, videoToSticker, type Mode } from './sticker.js';
+import { downloadMediaFromUrl } from './downloader.js';
 import { Boom } from '@hapi/boom'
 import qrcode from 'qrcode-terminal'
 
@@ -37,14 +38,40 @@ async function connectToWhatsapp() {
     for (const m of event.messages) {
       if (m.key.fromMe || !m.key.remoteJid) continue
 
-      const cmd = getText(m).trim().split(/\s+/)[0].toLowerCase()
+      const text = getText(m)
+      const cmd = text.trim().split(/\s+/)[0].toLowerCase()
       const mode = commands[cmd]
+      
       if (!mode) continue
 
+      const urlMatch = text.match(/https?:\/\/[^\s]+/);
+      const url = urlMatch ? urlMatch[0] : null;  
+
+      if (url) {
+        try {
+          // Aviso do início do download 
+          await sock.sendMessage(m.key.remoteJid, { text: 'Baixando e processando o link...' }, { quoted: m });
+
+          const { buffer, isVideo } = await downloadMediaFromUrl(url)
+
+          if (isVideo) {
+            const webp = await videoToSticker(buffer, mode);
+            await sock.sendMessage(m.key.remoteJid, { sticker: webp }, { quoted: m });
+          } else {
+            const webp = await imageToSticker(buffer, mode);
+            await sock.sendMessage(m.key.remoteJid, { sticker: webp }, { quoted: m });
+          }
+        } catch (err) {
+          console.error('Erro no processamento do link:', err);
+          await sock.sendMessage(m.key.remoteJid, { text: 'Não consegui baixar ou converter esse link, verifique se ele é público!' }, { quoted: m });
+        }
+        continue;
+      }
+      
       const media = getMedia(m)
       if (!media) {
-        await sock.sendMessage(m.key.remoteJid, { text: 'Envie ou responda uma imagem/video com o comando. (/s)' }, { quoted: m })
-        continue
+        await sock.sendMessage(m.key.remoteJid, { text: 'Envie ou responda uma imagem/video (ou link) com o comando. (/s) ou (/q)' }, { quoted: m })
+        continue;
       }
 
       try {

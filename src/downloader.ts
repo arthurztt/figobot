@@ -33,12 +33,12 @@ export async function downloadMediaFromUrl(url: string): Promise<{ buffer: Buffe
     const buffer = await readFile(filePath);
 
     //Checagem de extensão da midia
-    const isVideo = /\.(mp4|webm|mkv|avi|mov$/i.test(files[0]);
+    const isVideo = /\.(mp4|webm|mkv|avi|mov)$/i.test(files[0]);
 
     return { buffer, isVideo };
   } catch (error) {
-    console.log('Erro no Download via yt-dlp:', error);
-    throw new Error('Falha ao baixar a mídia. Verifique se o link é válidoo ou se a mídia é privada. ')
+    console.error('Erro no Download via yt-dlp:', error);
+    throw new Error('Falha ao baixar a mídia. Verifique se o link é válido ou se a mídia é privada. ')
   } finally {
     // Limpeza da pasta tempDir
     await rm(tempDir, { recursive: true, force: true }).catch(() => {});
