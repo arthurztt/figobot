@@ -3,7 +3,7 @@ import { execFile } from 'child_process'
 import { promisify } from 'util'
 import { randomUUID } from 'crypto'
 import { tmpdir } from 'os'
-import { join } from 'path/win32'
+import { join } from 'path' 
 import { readFile, writeFile, rm } from 'fs/promises'
 
 export type Mode = 'f' | 'q'
